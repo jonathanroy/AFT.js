@@ -11,7 +11,19 @@ var E = function(n) {
 // Universal Gas Constant
 var R = 8.314;
 
+var T_ref = 298.15;
+
 var K = function(molecule, T) {
+
+	// Prevent invalid values
+	if ( typeof T != 'number' || T <= 0 ) {
+		alert('ERROR: Invalid temperature!');
+		return false;
+	}
+	if ( typeof molecule != 'string' ) {
+		alert('ERROR: Invalid molecule!');
+		return false;
+	}
 	
 	switch ( molecule ) {
 	
