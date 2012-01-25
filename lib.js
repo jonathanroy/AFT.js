@@ -85,20 +85,11 @@ var K = function(molecule, T) {
 			
 	}
 	
+	this.Cp = R * ( this.a[0] * pow(T,-2) + this.a[1] * pow(T,-1) + this.a[2] + this.a[3] * T + this.a[4] * pow(T,2) + this.a[5] * pow(T,3) + this.a[6] * pow(T,4) );
+	
+	this.H = R * T * ( -this.a[0] * pow(T,-2) + this.a[1] * Math.log(T) * pow(T,-1) + this.a[2] + this.a[3] * T / 2 + this.a[4] * pow(T,2) / 3 + this.a[5] * pow(T,3) / 4 + this.a[6] * pow(T,4) / 5 + this.b[0] / T );
+
+	this.S0 = R * ( -this.a[0] * pow(T,-2) / 2 - this.a[1] * pow(T,-1) + this.a[2] * Math.log(T) + this.a[3] * T + this.a[4] * pow(T,2) / 2 + this.a[5] * pow(T,3) / 3 + this.a[6] * pow(T,4) / 4 + this.b[1] );
+	
 	return this;
-}
-
-var Cp = function(molecule, T) {
-	var k = K(molecule, T);
-	return R * ( k.a[0] * pow(T,-2) + k.a[1] * pow(T,-1) + k.a[2] + k.a[3] * T + k.a[4] * pow(T,2) + k.a[5] * pow(T,3) + k.a[6] * pow(T,4) );
-}
-
-var H = function(molecule, T) {
-	var k = K(molecule, T);
-	return R * T * ( -k.a[0] * pow(T,-2) + k.a[1] * Math.log(T) * pow(T,-1) + k.a[2] + k.a[3] * T / 2 + k.a[4] * pow(T,2) / 3 + k.a[5] * pow(T,3) / 4 + k.a[6] * pow(T,4) / 5 + k.b[0] / T );
-}
-
-var so = function(molecule, T) {
-	var k = K(molecule, T);
-	return R * ( -k.a[0] * pow(T,-2) / 2 - k.a[1] * pow(T,-1) + k.a[2] * Math.log(T) + k.a[3] * T + k.a[4] * pow(T,2) / 2 + k.a[5] * pow(T,3) / 3 + k.a[6] * pow(T,4) / 4 + k.b[2] );
 }
