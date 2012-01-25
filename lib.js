@@ -98,7 +98,7 @@ var H = function(molecule, T) {
 	return R * T * ( -k.a[0] * pow(T,-2) + k.a[1] * Math.log(T) * pow(T,-1) + k.a[2] + k.a[3] * T / 2 + k.a[4] * pow(T,2) / 3 + k.a[5] * pow(T,3) / 4 + k.a[6] * pow(T,4) / 5 + k.b[0] / T );
 }
 
-so = function(molecule, T) {
+var so = function(molecule, T) {
 	var k = K(molecule, T);
 	return R * ( -k.a[0] * pow(T,-2) / 2 - k.a[1] * pow(T,-1) + k.a[2] * Math.log(T) + k.a[3] * T + k.a[4] * pow(T,2) / 2 + k.a[5] * pow(T,3) / 3 + k.a[6] * pow(T,4) / 4 + k.b[2] );
 }
