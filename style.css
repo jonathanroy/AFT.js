@@ -1,13 +1,38 @@
 body {
 	margin: 0;
 	font-family: Helvetica, Arial, sans-serif;
-	font-size: 16px;
 	color: #222;
+	font-size: 12px;
 	background: #eee;
 }
 
+h1 { font-size: 32px; }
+h3 { font-size: 14px; }
+h4 { font-size: 13px; }
+
 p {
 	margin: 1.5em 0;
+}
+
+p.center {
+	text-align: center;
+}
+
+input, select, label, table {
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+label {
+	font-weight: bold;
+}
+
+input.like-text {
+	border: none;
+	background: none;
+}
+
+input.bold {
+	font-weight: bold;
 }
 
 span.data {
@@ -18,41 +43,67 @@ span.data {
 	padding: 2px 4px;
 }
 
-table {
+table.container {
 	width: 100%;
 	margin: 0.5em 0;
 	padding: 5px;
 	background: #fff;
 }
 
-table thead {
+table.container thead {
 	background: #333;
 }
 
-table thead td {
+table.container thead td {
+	font-size: 14px;
 	text-transform: uppercase;
 	font-weight: bold;
 	color: #fff;
 	padding: 5px 8px;
 }
 
-table tbody {
+table.container thead td.toggle {
+	text-align: right;
+}
+
+table.container tbody {
 	padding: 10px;
 }
 
-table tbody td.text {
+table.container tbody td {
+	padding: 8px 10px;
+}
+
+table.container tbody.data td {
+	padding: 8px 12px;
+	background: #f6f6f6;
+	border-top: 1px solid #fff;
+}
+
+table.container tbody td.text {
 	padding: 10px 15px;
 }
 
-input, button {
+table.container tbody td.label {
+	font-weight: bold;
+	white-space: nowrap;
+	width: 20px;
+}
+
+table.container tbody td.label, table.container tbody td.value {
+	font-size: 14px;
+}
+
+table.container tbody tr.data_head td {
+	font-size: 14px;
+	font-weight: bold;
+	background: #ccc;
+}
+
+.input, .button {
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 14px;
 	padding: 3px 5px;
-}
-
-#flame_temp_graph_container {
-	width: 800px;
-	height: 400px;
 }
 
 #header {
@@ -67,10 +118,24 @@ input, button {
 	text-shadow: -1px -1px 1px #660000;
 }
 
-#header #credits {
-	color: rgba(255,255,255,0.8);
-}
-
 #content {
 	padding: 10px 0;
+}
+
+#content #data {
+	min-height: 350px;
+	background: url(bg.png) center center no-repeat;
+}
+
+#intro {
+	font-size: 14px;
+}
+
+#single_phi_value, #multi_phi_value_min, #multi_phi_value_max {
+	width: 25px;
+}
+
+#flame_temp_graph_container {
+	width: 800px;
+	height: 400px;
 }

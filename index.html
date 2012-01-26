@@ -1,32 +1,35 @@
- <html>
- 	<head>
- 		<title>Adiabatic Flame Temperature Solver - AFT.js</title>
- 		<link type="text/css" href="http://firecdn.net/libs/960gs/960.min.css" rel="stylesheet" />
- 		<link type="text/css" href="style.css" rel="stylesheet" />
- 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
- 		<script type="text/javascript" src="http://firecdn.net/libs/jquery/1.6.3/jquery.min.js?ver=1.6.3"></script>
- 		<script type="text/javascript" src="http://firecdn.net/libs/jquery-ui/1.8.16/jquery-ui.min.js?ver=1.8.16"></script>
- 		<script type="text/javascript" src="http://firecdn.net/libs/highcharts/2.1.9/highcharts.min.js?ver=2.1.9"></script>
- 		<script type="text/javascript" src="highcharts.js"></script>
- 		<script type="text/javascript" src="aft.libs.js"></script>
- 		<script type="text/javascript" src="aft.core.js"></script>
- 		<script type="text/javascript" src="aft.ui.js"></script>
- 	</head>
- 	<body>
+<!doctype html>
+<html>
+	<head>
+		<title>Adiabatic Flame Temperature Solver - AFT.js</title>
+		<link type="text/css" href="http://firecdn.net/libs/960gs/960.min.css" rel="stylesheet" />
+		<link type="text/css" href="http://firecdn.net/libs/jquery-ui/css/base/jquery.ui.all.css" rel="stylesheet" />
+		<link type="text/css" href="http://firecdn.net/libs/jquery-ui/css/smoothness/jquery-ui.css" rel="stylesheet" />
+		<link type="text/css" href="style.css" rel="stylesheet" />
+		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js?ver=1.7.1"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js?ver=1.8.16"></script>
+		<script type="text/javascript" src="http://firecdn.net/libs/highcharts/2.1.9/highcharts.min.js?ver=2.1.9"></script>
+		<script type="text/javascript" src="aft.libs.js"></script>
+		<script type="text/javascript" src="aft.core.js"></script>
+		<script type="text/javascript" src="aft.ui.js"></script>
+	</head>
+	<body>
  		<div id="wrap">
  			<div id="header">
  				<div class="container_12 container">
 					<h1>Adiabatic Flame Temperature Solver</h1>
-					<p id="credits">By Jonathan Roy (260376942) for MECH 447 - Combustion @ McGill University</p>
+					<h4 id="credits">By Jonathan Roy (260376942) for MECH 447 - Combustion @ McGill University</h4>
 				</div>
  			</div>
  			<div id="content">
  				<div class="container_12 container">
  					<div class="grid_12">
-						<table id="intro" cellpadding="0" cellspacing="0" border="0">
+						<table id="intro" class="container" cellpadding="0" cellspacing="0" border="0">
 							<thead>
 								<tr>
 									<td>Introduction</td>
+									<td class="toggle"><button>Show/Hide</button></td>
 								</tr>
 							</thead>
 							<tbody>
@@ -43,7 +46,7 @@
 					</div>
 					<div class="clear"></div>
 					<div class="grid_4">
-						<table id="options" cellpadding="0" cellspacing="0">
+						<table id="options" class="container" cellpadding="0" cellspacing="0">
 							<thead>
 								<tr>
 									<td>Options</td>
@@ -51,24 +54,44 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td></td>
+									<td>
+										<h3>Fuel Equivalence Ratio (&phi;)</h3>
+										<div id="option_tabs">
+											<ul>
+												<li><a href="#single_phi_options">Single value</a></li>
+												<li><a href="#multi_phi_options">Range</a></li>
+											</ul>
+											<div id="single_phi_options">
+												<p class="center"><label>&phi; =</label> <input id="single_phi_value" type="text" class="like-text bold" size="3" /></p>
+												<div id="single_phi_slider"></div>
+												<p class="center"><button id="single_phi_calc">Calculate</button></p>
+											</div>
+											<div id="multi_phi_options">
+												<p class="center"><input id="multi_phi_value_min" type="text" class="like-text bold" size="3" /> <label>&lt; &phi; &lt;</label> <input id="multi_phi_value_max" type="text" class="like-text bold" size="3" /></p>
+												<div id="multi_phi_slider"></div>
+												<p class="center"><button id="multi_phi_calc">Calculate</button></p>
+											</div>
+										</div>
+									</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
-					<div class="grid_8">
-						<table id="SinglePhi" class="data" cellpadding="0" cellspacing="0" border="0">
+					<div id="data" class="grid_8">
+						<table id="single_phi_data" class="container" cellpadding="0" cellspacing="0" border="0">
 							<thead>
 								<tr>
-									<td class="label">Equivalence Ratio (&phi;)</td>
-									<td class="input"><input class="phi" type="text" size="5" value="1.0" /></td>
-									<td class="button"><button>Calculate</button></td>
+									<td colspan="2">Data</td>
 								</tr>
 							</thead>
-							<tbody>
-								<tr class="equation">
-									<td class="label"><label>Equation</label></td>
-									<td colspan="2" class="value">
+							<tbody class="data">
+								<tr>
+									<td class="label">Fuel Equivalence Ratio (&phi;)</td>
+									<td class="value"><span class="phi_value"></span></td>
+								</tr>
+								<tr>
+									<td class="label">Equation</td>
+									<td class="value equation">
 										<span class="reactants">
 											<span class="CO"><span class="v_CO"></span> CO</span>
 											<span class="O2">+ <span class="v_O2"></span> O<sub>2</sub></span>
@@ -80,37 +103,33 @@
 										</span>
 									</td>
 								</tr>
-								<tr class="flame_temp">
+								<tr>
 									<td class="label">Flame Temperature</label>
-									<td class="value"><input type="text" /></td>
-									<td class="units">K</td>
+									<td class="value"><span class="flame_temp_value"></span> K</td>
 								</tr>
 							</tbody>
 						</table>
-						<table id="MultiPhi" class="data" cellpadding="0" cellspacing="0" border="0">
+						<table id="multi_phi_data" class="container" cellpadding="0" cellspacing="0" border="0">
 							<thead>
 								<tr>
-									<td class="label">Equivalence Ratio</td>
-									<td class="input">
-										<input class="phi_min" type="text" size="5" value="0.5" />
-										&lt; &phi; &lt;
-										<input class="phi_max" type="text" size="5" value="2.0" />
-									</td>
-									<td class="button"><button>Calculate</button></td>
+									<td>Data</td>
+									<td align="right"><button id="open_graph">View Graph</button></td>
 								</tr>
 							</thead>
-							<tbody>
-								<tr class="flame_temp">
-									<td colspan="3">
-										<div id="flame_temp_graph_container"></div>
-									</td>
+							<tbody class="data">
+								<tr class="data_head">
+									<td>&phi;</td>
+									<td>Flame Temperature</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 					<div class="clear"></div>
+					<div id="graph" title="Graph">
+						<div id="flame_temp_graph_container"></div>
+					</div>
 				</div>
  			</div>
  		</div>
- 	</body>
- </html>
+	</body>
+</html>
