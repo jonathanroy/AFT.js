@@ -8,24 +8,30 @@ var E = function(n) {
 	return Math.pow(10,n);
 }
 
+var round = function (num, dec) {
+	var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+	return result;
+}
+
 // Universal Gas Constant
 var R = 8.314;
 
-var T_ref = 298.15;
+// Reference State
+var T_ref = 298.15; // K
+var P_ref = 101.325; // KPa
 
-var K = function(molecule, T) {
+var K = function(entity, T) {
 
-	// Prevent invalid values
-	if ( typeof T != 'number' || T <= 0 ) {
-		alert('ERROR: Invalid temperature!');
-		return false;
+	if ( typeof T == 'undefined' || typeof T != 'number' || T < 0 ) {
+		T = T_ref;
 	}
-	if ( typeof molecule != 'string' ) {
-		alert('ERROR: Invalid molecule!');
+	
+	if ( typeof entity != 'string' ) {
+		alert('ERROR: Invalid entity!');
 		return false;
 	}
 	
-	switch ( molecule ) {
+	switch ( entity ) {
 	
 		// Molecular Oxygen
 		case 'O2' :
@@ -64,6 +70,7 @@ var K = function(molecule, T) {
 		// Carbon Monoxide
 		case 'CO' :
 			this.h_f = -110535.196;
+			this.M = 28.010;
 			if ( T < 1000 ) {
 				this.a = [ 1.489045326*E(4), -2.922285939*E(2), 5.724527170, -8.176235030*E(-3), 1.456903469*E(-5), -1.087746302*E(-8), 3.027941827*E(-12) ];
 				this.b = [ -1.303131878*E(4), -7.859241350 ];
@@ -104,4 +111,8 @@ var K = function(molecule, T) {
 	this.S0 = R * ( -this.a[0] * pow(T,-2) / 2 - this.a[1] * pow(T,-1) + this.a[2] * Math.log(T) + this.a[3] * T + this.a[4] * pow(T,2) / 2 + this.a[5] * pow(T,3) / 3 + this.a[6] * pow(T,4) / 4 + this.b[1] );
 	
 	return this;
+}
+
+var mol_to_mass = function(n, entity) {
+	return n * K(entity).M;
 }

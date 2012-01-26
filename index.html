@@ -1,11 +1,116 @@
  <html>
  	<head>
- 		<title>AFT.js</title>
- 		<script type='text/javascript' src='http://firecdn.net/libs/jquery/1.6.3/jquery.min.js?ver=1.6.3'></script>
- 		<script type='text/javascript' src='lib.js'></script>
- 		<script type='text/javascript' src='aft.js'></script>
+ 		<title>Adiabatic Flame Temperature Solver - AFT.js</title>
+ 		<link type="text/css" href="http://firecdn.net/libs/960gs/960.min.css" rel="stylesheet" />
+ 		<link type="text/css" href="style.css" rel="stylesheet" />
+ 		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+ 		<script type="text/javascript" src="http://firecdn.net/libs/jquery/1.6.3/jquery.min.js?ver=1.6.3"></script>
+ 		<script type="text/javascript" src="http://firecdn.net/libs/jquery-ui/1.8.16/jquery-ui.min.js?ver=1.8.16"></script>
+ 		<script type="text/javascript" src="http://firecdn.net/libs/highcharts/2.1.9/highcharts.min.js?ver=2.1.9"></script>
+ 		<script type="text/javascript" src="highcharts.js"></script>
+ 		<script type="text/javascript" src="aft.libs.js"></script>
+ 		<script type="text/javascript" src="aft.core.js"></script>
+ 		<script type="text/javascript" src="aft.ui.js"></script>
  	</head>
  	<body>
- 		
+ 		<div id="wrap">
+ 			<div id="header">
+ 				<div class="container_12 container">
+					<h1>Adiabatic Flame Temperature Solver</h1>
+					<p id="credits">By Jonathan Roy (260376942) for MECH 447 - Combustion @ McGill University</p>
+				</div>
+ 			</div>
+ 			<div id="content">
+ 				<div class="container_12 container">
+ 					<div class="grid_12">
+						<table id="intro" cellpadding="0" cellspacing="0" border="0">
+							<thead>
+								<tr>
+									<td>Introduction</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="text">
+										<p>This application will analyze the thermodynamics of Carbon Monoxide with Oxygen flame.</p>
+										<p>\[\begin{aligned} \nu_{CO_2} CO_2 + \nu_{O_2} O_2 \rightarrow \nu_{CO_2} CO_2 \end{aligned}\]</p>
+										<p>The heating value of this reaction is <span class="data"><span class="heating_value molar_basis"></span> kJ/kmol</span> or <span class="data"><span class="data heating_value mass_basis"></span> kJ/kg</span>. Since no H<sub>2</sub>O is produced, the lower and higher heating value are the same.</p>
+										<p>This application calculates the adiabatic flame temperature for different Fuel Equivalence Ratios (&phi;)</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="clear"></div>
+					<div class="grid_4">
+						<table id="options" cellpadding="0" cellspacing="0">
+							<thead>
+								<tr>
+									<td>Options</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="grid_8">
+						<table id="SinglePhi" class="data" cellpadding="0" cellspacing="0" border="0">
+							<thead>
+								<tr>
+									<td class="label">Equivalence Ratio (&phi;)</td>
+									<td class="input"><input class="phi" type="text" size="5" value="1.0" /></td>
+									<td class="button"><button>Calculate</button></td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="equation">
+									<td class="label"><label>Equation</label></td>
+									<td colspan="2" class="value">
+										<span class="reactants">
+											<span class="CO"><span class="v_CO"></span> CO</span>
+											<span class="O2">+ <span class="v_O2"></span> O<sub>2</sub></span>
+										</span> &rarr;
+										<span class="products">
+											<span class="CO2"><span class="v_CO2"></span> CO<sub>2</sub></span>
+											<span class="CO">+ <span class="v_CO"></span> CO</span>
+											<span class="O2">+ <span class="v_O2"></span> O<sub>2</sub></span>
+										</span>
+									</td>
+								</tr>
+								<tr class="flame_temp">
+									<td class="label">Flame Temperature</label>
+									<td class="value"><input type="text" /></td>
+									<td class="units">K</td>
+								</tr>
+							</tbody>
+						</table>
+						<table id="MultiPhi" class="data" cellpadding="0" cellspacing="0" border="0">
+							<thead>
+								<tr>
+									<td class="label">Equivalence Ratio</td>
+									<td class="input">
+										<input class="phi_min" type="text" size="5" value="0.5" />
+										&lt; &phi; &lt;
+										<input class="phi_max" type="text" size="5" value="2.0" />
+									</td>
+									<td class="button"><button>Calculate</button></td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="flame_temp">
+									<td colspan="3">
+										<div id="flame_temp_graph_container"></div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="clear"></div>
+				</div>
+ 			</div>
+ 		</div>
  	</body>
  </html>

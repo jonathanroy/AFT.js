@@ -1,0 +1,76 @@
+body {
+	margin: 0;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	color: #222;
+	background: #eee;
+}
+
+p {
+	margin: 1.5em 0;
+}
+
+span.data {
+	font-family: 'Courier New', 'Lucida Console';
+	font-size: 95%;
+	font-weight: bold;
+	background: #eee;
+	padding: 2px 4px;
+}
+
+table {
+	width: 100%;
+	margin: 0.5em 0;
+	padding: 5px;
+	background: #fff;
+}
+
+table thead {
+	background: #333;
+}
+
+table thead td {
+	text-transform: uppercase;
+	font-weight: bold;
+	color: #fff;
+	padding: 5px 8px;
+}
+
+table tbody {
+	padding: 10px;
+}
+
+table tbody td.text {
+	padding: 10px 15px;
+}
+
+input, button {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	padding: 3px 5px;
+}
+
+#flame_temp_graph_container {
+	width: 800px;
+	height: 400px;
+}
+
+#header {
+	padding: 10px 20px;
+	color: #FFF;
+	background: #CC0000;
+	border-top: 5px solid #660000;
+	border-bottom: 1px solid #AA0000;
+}
+
+#header h1 {
+	text-shadow: -1px -1px 1px #660000;
+}
+
+#header #credits {
+	color: rgba(255,255,255,0.8);
+}
+
+#content {
+	padding: 10px 0;
+}
