@@ -80,6 +80,10 @@ table.container tbody.data td {
 	border-top: 1px solid #fff;
 }
 
+table.container tbody.data.small td {
+	padding: 5px 12px;
+}
+
 table.container tbody td.text {
 	padding: 10px 15px;
 }
@@ -98,6 +102,7 @@ table.container tbody tr.data_head td {
 	font-size: 14px;
 	font-weight: bold;
 	background: #ccc;
+	padding: 8px 12px;
 }
 
 .input, .button {
@@ -133,6 +138,10 @@ table.container tbody tr.data_head td {
 
 #single_phi_value, #multi_phi_value_min, #multi_phi_value_max {
 	width: 25px;
+}
+
+#open_graph {
+	font-size: 14px;
 }
 
 #flame_temp_graph_container {

@@ -3,7 +3,11 @@ $(document).ready(function() {
 	// activate option tabs
 	$('#option_tabs').tabs();
 	
-	$('#graph').dialog({ width: 800, height: 400, autoOpen: false });
+	$('#graph').dialog({
+		width: 830,
+		height: 445,
+		autoOpen: false
+	});
 	$('#open_graph').click(function() {
 		$('#graph').dialog('open');
 	});
@@ -52,7 +56,7 @@ $(document).ready(function() {
 	$('#single_phi_calc').click(function() {
 		
 		$single_phi_data.fadeIn();
-		$multi_phi_data.fadeOut();
+		$multi_phi_data.hide();
 		
 		var phi = parseFloat( $options.find('#single_phi_value').val() );
 		var equation = getEquation( phi );
@@ -77,7 +81,7 @@ $(document).ready(function() {
 	$('#multi_phi_calc').click(function() {
 	
 		$multi_phi_data.fadeIn();
-		$single_phi_data.fadeOut();
+		$single_phi_data.hide();
 		
 		$multi_phi_data.find('.calc-row').remove();
 		
@@ -87,34 +91,46 @@ $(document).ready(function() {
 			'step': 0.100
 		}
 		
+		var data = [];
+		
 		for ( phi.i = phi.min; phi.i <= phi.max; phi.i += phi.step ) {
 			
 			phi.i = round(phi.i,2);
 			
-			$multi_phi_data.children('tbody').append('<tr class="calc-row"><td class="label">' + phi.i + '</td><td class="value">' + round( flameTemp(phi.i), 4 ) + '</td></tr>');
+			var temp = round( flameTemp(phi.i), 4);
 			
+			$multi_phi_data.children('tbody').append('<tr class="calc-row"><td class="label">' + phi.i + '</td><td class="value">' + temp + '</td></tr>');
+			
+			data.push( [ phi.i, temp ] );
 		}
+		
+		graph.series[0].setData( data );
 		
 	});
 	
-	flame_temp_graph = new Highcharts.Chart({
+	graph = new Highcharts.Chart({
 		chart: {
 			renderTo: 'flame_temp_graph_container',
 			defaultSeriesType: 'line',
-			marginRight: 130,
-			marginBottom: 25
 		},
 		title: {
 			text: 'Flame Temperature vs. Fuel Equivalence Ratio',
 			x: -20 //center
 		},
+		legend: {
+			enabled: false
+		},
 		xAxis: {
-			categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-				'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+			title: {
+				enabled: true,
+				text: 'Fuel Equivalence Ratio',
+				margin: 40
+			}
 		},
 		yAxis: {
 			title: {
-				text: 'Temperature (°C)'
+				text: 'Flame Temperature [K]',
+				margin: 60
 			},
 			plotLines: [{
 				value: 0,
@@ -124,30 +140,15 @@ $(document).ready(function() {
 		},
 		tooltip: {
 			formatter: function() {
-					return 'FlameTemp(' + this.x + ') = ' + this.y;
+				return 'FlameTemp(' + this.x + ') = ' + this.y;
 			}
 		},
-		legend: {
-			layout: 'vertical',
-			align: 'right',
-			verticalAlign: 'top',
-			x: -10,
-			y: 100,
-			borderWidth: 0
-		},
 		series: [{
-			name: 'Tokyo',
-			data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-		}, {
-			name: 'New York',
-			data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-		}, {
-			name: 'Berlin',
-			data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-		}, {
-			name: 'London',
-			data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-		}]
+			data: []
+		}],
+		credits: {
+			enabled: false
+		}
 	});
 	
 });
