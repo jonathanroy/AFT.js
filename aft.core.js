@@ -79,7 +79,7 @@ var getdH = function(equation, T_products, T_reactants) {
  */
 
 var HV = function(equation, fuel) {
-	var nFuel = equation.reactant[fuel];
+	var nFuel = equation.reactants[fuel];
 	var dH = getdH(equation, T_ref, T_ref);
 	return dH / nFuel;
 }
