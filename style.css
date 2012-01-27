@@ -132,8 +132,9 @@ table.container tbody tr.data_head td {
 	background: url(bg.png) center center no-repeat;
 }
 
-#intro {
+#intro p {
 	font-size: 14px;
+	line-height: 1.5;
 }
 
 #single_phi_value, #multi_phi_value_min, #multi_phi_value_max {
@@ -141,7 +142,7 @@ table.container tbody tr.data_head td {
 }
 
 #open_graph {
-	font-size: 14px;
+	font-size: 13px;
 }
 
 #flame_temp_graph_container {
