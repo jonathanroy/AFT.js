@@ -1,31 +1,5 @@
 
 /*
- * HV
- * Calculates the Heating Value
- *
- * @equation Object Chemical equation to be analyzed
- * 1 CO + 0.5 CO2 => 1 CO2
- * is equivalent to
- * { 'reactants': { 'CO': 1, 'O2': 0.5 }, 'products': { 'CO2': 1 } }
- *
- * Notes:	- make sure your equation is stoichiometric,
- * 			- always put your fuel first.
- */
-
-var HV = function(equation) {
-	var H = 0;
-	var nFuel = 0;
-	$.each(equation.reactants, function(entity, n) {
-		if ( !nFuel ) nFuel = n;
-		H += n * K(entity, T_ref).H;
-	});
-	$.each(equation.products, function(entity, n) {
-		H -= n * K(entity, T_ref).H;
-	});
-	return H / nFuel;
-}
-
-/*
  * getEquation
  *
  * @phi Fuel Equivalence Ratio
@@ -89,6 +63,25 @@ var getdH = function(equation, T_products, T_reactants) {
 	
 	return H;
 	
+}
+
+/*
+ * HV
+ * Calculates the Heating Value
+ *
+ * @equation Object Chemical equation to be analyzed
+ * 1 CO + 0.5 CO2 => 1 CO2
+ * is equivalent to
+ * { 'reactants': { 'CO': 1, 'O2': 0.5 }, 'products': { 'CO2': 1 } }
+ *
+ * Notes:	- make sure your equation is stoichiometric,
+ * 			- always put your fuel first.
+ */
+
+var HV = function(equation, fuel) {
+	var nFuel = equation.reactant.fuel;
+	var dH = getdH(equation, T_ref, T_ref);
+	return dH / nFuel;
 }
 
 var flameTemp = function(phi) {

@@ -114,5 +114,5 @@ var K = function(entity, T) {
 }
 
 var mol_to_mass = function(n, entity) {
-	return n * K(entity).M;
+	return n / K(entity).M;
 }
