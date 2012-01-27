@@ -40,7 +40,7 @@ $(document).ready(function() {
 	$('.toggle button').click(function() { $(this).parents('table').children('tbody').toggle(); });
 	
 	// calculate heating value
-	var heating_value = HV({ 'reactants': { 'CO': 1, 'O2': 0.5 }, 'products': { 'CO2': 1 } });
+	var heating_value = HV({ 'reactants': { 'CO': 1, 'O2': 0.5 }, 'products': { 'CO2': 1 } }, 'CO');
 	$('#intro .heating_value.molar_basis').text( round( heating_value, 4 ) );
 	$('#intro .heating_value.mass_basis').text( round( mol_to_mass( heating_value, 'CO' ), 4 ) );
 	
