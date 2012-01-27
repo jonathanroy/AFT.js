@@ -3,7 +3,8 @@
  * getEquation
  *
  * @phi Fuel Equivalence Ratio
- * @return Object Equation
+ *
+ * @return Object Reaction equation
  */
 
 var getEquation = function(phi) {
@@ -47,6 +48,18 @@ var getEquation = function(phi) {
 	
 }
 
+/*
+ * getdH
+ * Get the difference in enthalpy between the reactants
+ * and the products of a given reaction.
+ *
+ * @equation Object Reaction equation
+ * @T_products Float Products temperature
+ * @T_reactants Float Reactants temperature
+ *
+ * @return Float Enthalpy difference between reactants and products
+ */
+
 var getdH = function(equation, T_products, T_reactants) {
 	
 	if ( typeof T_reactants == 'undefined' ) T_reactants = T_ref;
@@ -70,12 +83,13 @@ var getdH = function(equation, T_products, T_reactants) {
  * Calculates the Heating Value
  *
  * @equation Object Chemical equation to be analyzed
- * 1 CO + 0.5 CO2 => 1 CO2
- * is equivalent to
+ * 1 CO + 0.5 CO2 => 1 CO2 is equivalent to
  * { 'reactants': { 'CO': 1, 'O2': 0.5 }, 'products': { 'CO2': 1 } }
+ * @fuel String Reaction Fuel entity (e.g. 'CO')
  *
- * Notes:	- make sure your equation is stoichiometric,
- * 			- always put your fuel first.
+ * @return Float Heating Value in kJ/kmol
+ *
+ * Note: make sure your equation is stoichiometric
  */
 
 var HV = function(equation, fuel) {
@@ -83,6 +97,16 @@ var HV = function(equation, fuel) {
 	var dH = getdH(equation, T_ref, T_ref);
 	return dH / nFuel;
 }
+
+
+/*
+ * flameTemp
+ * Calculates the adiabatic flame temperature given a fuel equivalence ratio
+ *
+ * @phi Float Fuel Equivalence Ratio
+ *
+ * @return Float Flame Temperature in Kelvins
+ */
 
 var flameTemp = function(phi) {
 
