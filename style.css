@@ -116,11 +116,6 @@ table.container tbody tr.data_head td {
 	color: #FFF;
 	background: #CC0000;
 	border-top: 5px solid #660000;
-	border-bottom: 1px solid #AA0000;
-}
-
-#header h1 {
-	text-shadow: -1px -1px 1px #660000;
 }
 
 #content {
