@@ -6,12 +6,13 @@
 
 ## Files
 
-- index.html -- HTML user interface (UI)
-- style.css -- formats the UI
-- bg.png -- background image (ignore)
 - aft.ui.js -- controls the UI
 - aft.libs.js -- librairies of constants and basic functions
 - aft.core.js -- where most calculations happen, core functions
+- index.html -- HTML UI
+- style.css -- formats the UI
+- bg.png -- background image (ignore)
+- fork_me_on_github.png -- github banner (ignore)
 
 ## Dependencies
 
