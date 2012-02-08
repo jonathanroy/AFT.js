@@ -7,6 +7,7 @@ body {
 }
 
 h1 { font-size: 32px; }
+h2 { font-size: 18px; text-transform: uppercase; }
 h3 { font-size: 14px; }
 h4 { font-size: 13px; }
 
@@ -18,6 +19,8 @@ label { font-weight: bold; }
 input, select, label, table { font-family: Helvetica, Arial, sans-serif; }
 input.like-text { border: none; background: none; }
 input.bold { font-weight: bold; }
+
+#calc { font-size: 16px; }
 
 span.data {
 	font-family: 'Courier New', 'Lucida Console';
@@ -100,26 +103,34 @@ table.container tbody tr.data_head td {
 	color: #FFF;
 	background: #CC0000;
 	border-top: 5px solid #660000;
+	text-align: center;
 }
 
 #content {
 	padding: 10px 0;
 }
 
-#content #data {
-	min-height: 350px;
+#content #main {
+	min-height: 500px;
 	background: url(bg.png) center center no-repeat;
 }
 
-#intro tbody { display: none; }
-
-#intro p {
-	font-size: 14px;
-	line-height: 1.5;
+#single_phi_value, #multi_phi_value_min, #multi_phi_value_max,
+#single_pressure_value, #multi_pressure_value_min, #multi_pressure_value_max {
+	width: 50px;
 }
 
-#single_phi_value, #multi_phi_value_min, #multi_phi_value_max {
-	width: 25px;
+#multi_pressure_value_min, #multi_phi_value_min {
+	text-align: right;
+}
+
+#consider_dissociation_options {
+	padding: 0 15px;
+	border: 1px solid #ccc;
+}
+
+#allowed_entities_options {
+	margin-left: 20px;
 }
 
 #open_graph {

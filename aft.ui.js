@@ -1,45 +1,25 @@
 $(document).ready(function() {
 	
 	// initialize option tabs
-	$('#option_tabs').tabs();
+	$phi_option_tabs = $('#phi_option_tabs').tabs();
+	$pressure_option_tabs = $('#pressure_option_tabs').tabs();
 	
 	// initialize dialog window
-	$('#graph').dialog({
-		width: 830,
-		height: 445,
-		autoOpen: false
-	});
-	$('#open_graph').click(function() {
-		$('#graph').dialog('open');
-	});
+	$('#graph').dialog({ width: 830, height: 445, autoOpen: false });
+	$('#open_graph').click(function() { $('#graph').dialog('open'); });
+	$('#open_graph').hide();
 	
 	// activate option sliders
-	
-	$('#single_phi_slider').slider({
-		value: 1.0,
-		min: 0,
-		max: 5.0,
-		step: 0.1,
-		slide: function( event, ui ) {
-			$('#single_phi_value').val( ui.value );
-		}
-	});
+	$('#single_phi_slider').slider({ value: 1.0, min: 0, max: 5.0, step: 0.1, slide: function( event, ui ) { $('#single_phi_value').val( ui.value ); } });
 	$('#single_phi_value').val( $('#single_phi_slider').slider('value') );
-	
-	$('#multi_phi_slider').slider({
-		range: true,
-		min: 0,
-		max: 5.0,
-		step: 0.1,
-		values: [ 0.5, 2.0 ],
-		slide: function( event, ui ) {
-			$('#multi_phi_value_min').val( ui.values[ 0 ] );
-			$('#multi_phi_value_max').val( ui.values[ 1 ] );
-		}
-	});
+	$('#multi_phi_slider').slider({ range: true, min: 0, max: 5.0, step: 0.1, values: [ 0.5, 2.0 ], slide: function( event, ui ) { $('#multi_phi_value_min').val( ui.values[ 0 ] ); $('#multi_phi_value_max').val( ui.values[ 1 ] ); } });
 	$('#multi_phi_value_min').val( $('#multi_phi_slider').slider('values', 0) );
 	$('#multi_phi_value_max').val( $('#multi_phi_slider').slider('values', 1) );
-	
+	$('#single_pressure_slider').slider({ value: 1.0, min: 0.25, max: 10.0, step: 0.25, slide: function( event, ui ) { $('#single_pressure_value').val( ui.value ); } });
+	$('#single_pressure_value').val( $('#single_pressure_slider').slider('value') );
+	$('#multi_pressure_slider').slider({ range: true, min: 0.25, max: 15.0, step: 0.25, values: [ 0.25, 10.0 ], slide: function( event, ui ) { $('#multi_pressure_value_min').val( ui.values[ 0 ] ); $('#multi_pressure_value_max').val( ui.values[ 1 ] ); } });
+	$('#multi_pressure_value_min').val( $('#multi_pressure_slider').slider('values', 0) );
+	$('#multi_pressure_value_max').val( $('#multi_pressure_slider').slider('values', 1) );
 	
 	// toggle table content button
 	$('.toggle button').click(function() { $(this).parents('table').children('tbody').toggle(); });
@@ -49,61 +29,147 @@ $(document).ready(function() {
 	$('#intro .heating_value.molar_basis').text( round( heating_value, 4 ) );
 	$('#intro .heating_value.mass_basis').text( round( mol_to_mass( heating_value, 'CO' ), 4 ) );
 	
-	$options = $('#options');
-	
-	$single_phi_data = $('#single_phi_data');
-	$single_phi_data.hide();
-	
-	$('#single_phi_calc').click(function() {
+	var $options = $('#options'),
+		$data = $('#data');
 		
-		$single_phi_data.fadeIn();
-		$multi_phi_data.hide();
-		
-		var phi = parseFloat( $options.find('#single_phi_value').val() );
-		var equation = getEquation( phi );
-		
-		$single_phi_data.find('.phi_value').text( phi );
-		
-		$single_phi_data.find('.equation .reactants .v_CO').text( round(equation.reactants.CO, 4) );
-		$single_phi_data.find('.equation .reactants .v_O2').text( round(equation.reactants.O2, 4) );
-		$single_phi_data.find('.equation .products .v_CO2').text( round(equation.products.CO2, 4) );
-		$single_phi_data.find('.equation .products .v_CO').text( round(equation.products.CO, 4) );
-		$single_phi_data.find('.equation .products .v_O2').text( round(equation.products.O2, 4) );
-		( equation.products.CO == 0 ) ? $single_phi_data.find('.equation .products .CO').hide() : $single_phi_data.find('.equation .products .CO').show();
-		( equation.products.O2 == 0 ) ? $single_phi_data.find('.equation .products .O2').hide() : $single_phi_data.find('.equation .products .O2').show();
-		
-		$single_phi_data.find('.flame_temp_value').text( round( flameTemp( phi ), 4 ) );
-		
+	var $consider_dissociation = $options.find('#consider_dissociation');
+	$consider_dissociation.change(function() {
+		( $(this).val() == 1 ) ? $(this).val(0) : $(this).val(1);
+		$('#consider_dissociation_options').slideToggle();
 	});
 	
-	$multi_phi_data = $('#multi_phi_data');
-	$multi_phi_data.hide();
+	$('#calc').click(function() {
 	
-	$('#multi_phi_calc').click(function() {
+		$data.find('.calc-row').remove();
 	
-		$multi_phi_data.fadeIn();
-		$single_phi_data.hide();
+		var phi_type = ( $phi_option_tabs.tabs('option', 'selected') == 0 ) ? 'single' : 'multi';
+		var pressure_type = ( $pressure_option_tabs.tabs('option', 'selected') == 0 ) ? 'single' : 'multi';
+		var consider_dissociation = ( $consider_dissociation.val() == "1" );
 		
-		$multi_phi_data.find('.calc-row').remove();
-		
-		var phi = {
-			'min': parseFloat( $options.find('#multi_phi_value_min').val() ),
-			'max': parseFloat( $options.find('#multi_phi_value_max').val() ),
-			'step': 0.100
+		if ( phi_type == 'single' ) {
+			var phi = parseFloat( $options.find('#single_phi_value').val() );
+		}
+		else if ( phi_type == 'multi' ) {
+			var phi = {
+				'min': parseFloat( $options.find('#multi_phi_value_min').val() ),
+				'max': parseFloat( $options.find('#multi_phi_value_max').val() ),
+				'step': 0.100
+			}
+		}
+		if ( pressure_type == 'single' ) {
+			var pressure = parseFloat( $options.find('#single_pressure_value').val() );
+		}
+		else if ( pressure_type == 'multi' ) {
+			var pressure = {
+				'min': parseFloat( $options.find('#multi_pressure_value_min').val() ),
+				'max': parseFloat( $options.find('#multi_pressure_value_max').val() ),
+				'step': 0.25
+			}
 		}
 		
 		var data = [];
 		
-		for ( phi.i = phi.min; phi.i <= phi.max; phi.i += phi.step ) {
-			phi.i = round(phi.i,2);
-			var temp = round( flameTemp(phi.i), 4);
-			$multi_phi_data.children('tbody').append('<tr class="calc-row"><td class="label">' + phi.i + '</td><td class="value">' + temp + '</td></tr>');
-			data.push( [ phi.i, temp ] );
+		if ( !consider_dissociation ) {
+			
+			if ( phi_type == 'single' ) {
+				
+				var temp = flameTemp( phi );
+				
+				$data.children('tbody').append('<tr class="calc-row"><td>-</td><td>' + round(phi,4) + '</td><td class="value">' + round(temp,4) + '</td></tr>');
+				
+				$('#open_graph').hide();
+				
+			}
+			
+			else if ( phi_type == 'multi' ) {
+				
+				for ( phi.i = phi.min; phi.i <= phi.max; phi.i += phi.step ) {
+				
+					var temp = flameTemp( phi.i );
+					
+					$data.children('tbody').append('<tr class="calc-row"><td>-</td><td>' + round(phi.i,2) + '</td><td>' + round(temp,4) + '</td></tr>');
+					
+					data.push( [ round(phi.i,2), round(temp,4) ] );
+					
+				}
+				
+				graph.series[0].setData( data );
+				graph.setTitle({ text: "Flame Temperature vs. Fuel Equivalence Ratio" });
+				$(graph.xAxis[0].axisTitle.element).text('Fuel Equivalence Ration (phi)');
+				
+				$('#open_graph').show();
+				
+			}
+			
 		}
 		
-		graph.series[0].setData( data );
+		else {
 		
+			var allowed_entities = [];
+			$options.find('input[name="allowed_entities[]"]:checked').each(function() { allowed_entities.push( $(this).val() ); });
+			
+			if ( phi_type == 'single' && pressure_type == 'single' ) {
+				
+				var temp = flameTemp(phi, pressure, true, allowed_entities);
+				
+				$data.children('tbody').append('<tr class="calc-row"><td>' + round(pressure,2) + '</td><td>' + round(phi,2) + '</td><td>' + round(temp,4) + '</td></tr>');
+				
+				$('#open_graph').hide();
+				
+			}
+			
+			else if ( phi_type == 'multi' && pressure_type == 'single' ) {
+				
+				for ( phi.i = phi.min; phi.i <= phi.max; phi.i += phi.step ) {
+				
+					var temp = flameTemp(phi.i, pressure, true, allowed_entities);
+					
+					$data.children('tbody').append('<tr class="calc-row"><td>' + round(pressure,2) + '</td><td>' + round(phi.i,2) + '</td><td>' + round(temp,4) + '</td></tr>');
+					
+					data.push( [ round(phi.i,2), round(temp,4) ] );
+					
+				}
+				
+				graph.series[0].setData( data );
+				graph.setTitle({ text: "Flame Temperature vs. Fuel Equivalence Ratio (P = " + pressure + " atm)" });
+				$(graph.xAxis[0].axisTitle.element).text('Fuel Equivalence Ration (phi)');
+				
+				$('#open_graph').show();
+				
+			}
+			
+			else if ( phi_type == 'single' && pressure_type == 'multi' ) {
+			
+				for ( pressure.i = pressure.min; pressure.i <= pressure.max; pressure.i += pressure.step ) {
+				
+					var temp = flameTemp(phi, pressure.i, true, allowed_entities);
+					
+					$data.children('tbody').append('<tr class="calc-row"><td>' + round(pressure.i,2) + '</td><td>' + round(phi,2) + '</td><td>' + round(temp,4) + '</td></tr>');
+					
+					data.push( [ round(pressure.i,2), round(temp,4) ] );
+					
+				}
+				
+				graph.series[0].setData( data );
+				graph.setTitle({ text: "Flame Temperature vs. Pressure (phi = " + phi + ")" });
+				$(graph.xAxis[0].axisTitle.element).text('Pressure (atm)');
+				
+				$('#open_graph').show();
+			
+			}
+			
+			else if ( phi_type == 'multi' && pressure_type == 'multi' ) {
+				
+				alert("Can't have ranges for both phi and pressure!");
+				
+				$('#open_graph').hide();
+				
+			}
+				
+		}
+	
 	});
+	
 	
 	graph = new Highcharts.Chart({
 		chart: {
@@ -111,7 +177,7 @@ $(document).ready(function() {
 			defaultSeriesType: 'line',
 		},
 		title: {
-			text: 'Flame Temperature vs. Fuel Equivalence Ratio',
+			text: '-',
 			x: -20 //center
 		},
 		legend: {
@@ -120,7 +186,7 @@ $(document).ready(function() {
 		xAxis: {
 			title: {
 				enabled: true,
-				text: 'Fuel Equivalence Ratio',
+				text: '-',
 				margin: 40
 			}
 		},

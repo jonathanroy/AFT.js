@@ -1,13 +1,14 @@
 
 /*
  * getEquation
+ * Return the reaction equation for a given phi. It does not consider dissociation.
  * @phi		Fuel Equivalence Ratio
+ * @FOR_st	Fuel to Oxidizer Ratio (Stoichiometric)
  * @return	Object Reaction equation
  */
 
-var getEquation = function(phi) {
+var getEquation = function(phi, FOR_st) {
 
-	var FOR_st = 2; // Fuel to Oxidizer Ratio (Stoichiometric)
 	var FOR_act = phi * FOR_st;
 
 	var nFuel = 1;
@@ -102,7 +103,9 @@ var HV = function(equation, fuel) {
 
 var flameTemp = function(phi, P, considerDissociation, allowedEntities) {
 
-	var equation = getEquation(phi);
+	var FOR_st = 2; // Value for Carbon Monoxy - Oxygen (this will eventually be a UI option)
+
+	var equation = getEquation(phi, FOR_st);
 	
 	return bisection({
 		fct: function(T) {
@@ -123,8 +126,8 @@ var flameTemp = function(phi, P, considerDissociation, allowedEntities) {
 };
 
 /*
- *
- *
+ * explodeEntity
+ * Make soup of elements from entity
  */
 
 var explodeEntity = function(entity) {
@@ -151,7 +154,7 @@ var explodeEntity = function(entity) {
 
 /*
  * explodeEntities
- *
+ * Make soup of elements from a list of entities
  */
 
 var explodeEntities = function(entities) {
