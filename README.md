@@ -20,6 +20,5 @@
 
 - jQuery (http://jquery.com/)
 - jQuery-UI (http://jqueryui.com/)
-- MathJax (http://www.mathjax.org/)
 - 960gs (http://960.gs/)
 - Highcharts (http://www.highcharts.com/)
