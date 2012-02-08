@@ -1,30 +1,15 @@
-// Shortcut for power: x^n = pow(x,n)
-var pow = function(x,n) {
-	return Math.pow(x,n);
-}
-
-// Shortcut for scientific notation: E(n) = 10^n
-var E = function(n) {
-	return Math.pow(10,n);
-}
-
-var round = function (num, dec) {
-	var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
-	return result;
-}
-
 // Universal Gas Constant
 var R = 8.314;
 
 // Reference State
 var T_ref = 298.15; // K
-var P_ref = 101.325; // KPa
+var P_ref = 1.000; // atm
 
-var K = function(entity, T) {
+var K = function(entity, T, P) {
 
-	if ( typeof T == 'undefined' || typeof T != 'number' || T < 0 ) {
-		T = T_ref;
-	}
+	if ( typeof T != 'number' || T < 0 ) T = T_ref;
+	
+	if ( typeof P != 'number' || P < 0 ) P = P_ref;
 	
 	if ( typeof entity != 'string' ) {
 		alert('ERROR: Invalid entity!');
@@ -35,7 +20,6 @@ var K = function(entity, T) {
 	
 		// Molecular Oxygen
 		case 'O2' :
-			this.h_f = 0;
 			if ( T < 1000 ) {
 				this.a = [ -3.425563420*E(4), 4.847000970*E(2), 1.119010961, 4.293889240*E(-3), -6.836300520*E(-7), -2.023372700*E(-9), 1.039040018*E(-12) ];
 				this.b = [ -3.391454870*E(3), 1.849699470*E(1) ];
@@ -52,7 +36,6 @@ var K = function(entity, T) {
 		
 		// Atomic Oxygen
 		case 'O' :
-			this.h_f = 249175.003;
 			if ( T < 1000 ) {
 				this.a = [ -7.953611300*E(3), 1.607177787*E(2), 1.966226438, 1.013670310*E(-3), -1.110415423*E(-6), 6.517507500*E(-10), 1.584779251*E(-13) ];
 				this.b = [ 2.840362437*E(4), 8.404241820 ];
@@ -69,7 +52,6 @@ var K = function(entity, T) {
 		
 		// Carbon Monoxide
 		case 'CO' :
-			this.h_f = -110535.196;
 			this.M = 28.010;
 			if ( T < 1000 ) {
 				this.a = [ 1.489045326*E(4), -2.922285939*E(2), 5.724527170, -8.176235030*E(-3), 1.456903469*E(-5), -1.087746302*E(-8), 3.027941827*E(-12) ];
@@ -87,7 +69,6 @@ var K = function(entity, T) {
 			
 		// Carbon Dioxide
 		case 'CO2' :
-			this.h_f = -393510.000;
 			if ( T < 1000 ) {
 				this.a = [ 4.943650540*E(4), -6.264116010*E(2), 5.301725240, 2.503813816*E(-3), -2.127308728*E(-7), -7.689988780*E(-10), 2.849677801*E(-13) ];
 				this.b = [ -4.528198460*E(4), -7.048279440 ];
@@ -104,14 +85,31 @@ var K = function(entity, T) {
 			
 	}
 	
+	// Specific heat at constant pressure
 	this.Cp = R * ( this.a[0] * pow(T,-2) + this.a[1] * pow(T,-1) + this.a[2] + this.a[3] * T + this.a[4] * pow(T,2) + this.a[5] * pow(T,3) + this.a[6] * pow(T,4) );
 	
+	// Enthalpy
 	this.H = R * T * ( -this.a[0] * pow(T,-2) + this.a[1] * Math.log(T) * pow(T,-1) + this.a[2] + this.a[3] * T / 2 + this.a[4] * pow(T,2) / 3 + this.a[5] * pow(T,3) / 4 + this.a[6] * pow(T,4) / 5 + this.b[0] / T );
 
+	// Entropy at P_ref
 	this.S0 = R * ( -this.a[0] * pow(T,-2) / 2 - this.a[1] * pow(T,-1) + this.a[2] * Math.log(T) + this.a[3] * T + this.a[4] * pow(T,2) / 2 + this.a[5] * pow(T,3) / 3 + this.a[6] * pow(T,4) / 4 + this.b[1] );
+	
+	// Entropy
+	this.S = this.S0 - R * Math.log( P / P_ref );
+	
+	// Gibbs free energy
+	this.G = this.H - T * this.S;
 	
 	return this;
 }
+
+/*
+ * mol_to_mass
+ * Converts from molar basis to mass basis
+ * @n		Number of moles
+ * @entity	Which molecule/atom is it?
+ * @return 	mass basis value
+ */
 
 var mol_to_mass = function(n, entity) {
 	return n / K(entity).M;

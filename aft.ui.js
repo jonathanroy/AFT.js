@@ -1,8 +1,9 @@
 $(document).ready(function() {
 	
-	// activate option tabs
+	// initialize option tabs
 	$('#option_tabs').tabs();
 	
+	// initialize dialog window
 	$('#graph').dialog({
 		width: 830,
 		height: 445,
@@ -94,13 +95,9 @@ $(document).ready(function() {
 		var data = [];
 		
 		for ( phi.i = phi.min; phi.i <= phi.max; phi.i += phi.step ) {
-			
 			phi.i = round(phi.i,2);
-			
 			var temp = round( flameTemp(phi.i), 4);
-			
 			$multi_phi_data.children('tbody').append('<tr class="calc-row"><td class="label">' + phi.i + '</td><td class="value">' + temp + '</td></tr>');
-			
 			data.push( [ phi.i, temp ] );
 		}
 		

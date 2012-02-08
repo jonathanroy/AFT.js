@@ -10,30 +10,14 @@ h1 { font-size: 32px; }
 h3 { font-size: 14px; }
 h4 { font-size: 13px; }
 
-p {
-	margin: 1.5em 0;
-}
+p { margin: 1.5em 0; }
+p.center { text-align: center; }
 
-p.center {
-	text-align: center;
-}
+label { font-weight: bold; }
 
-input, select, label, table {
-	font-family: Helvetica, Arial, sans-serif;
-}
-
-label {
-	font-weight: bold;
-}
-
-input.like-text {
-	border: none;
-	background: none;
-}
-
-input.bold {
-	font-weight: bold;
-}
+input, select, label, table { font-family: Helvetica, Arial, sans-serif; }
+input.like-text { border: none; background: none; }
+input.bold { font-weight: bold; }
 
 span.data {
 	font-family: 'Courier New', 'Lucida Console';
@@ -126,6 +110,8 @@ table.container tbody tr.data_head td {
 	min-height: 350px;
 	background: url(bg.png) center center no-repeat;
 }
+
+#intro tbody { display: none; }
 
 #intro p {
 	font-size: 14px;

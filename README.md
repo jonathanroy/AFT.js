@@ -7,8 +7,10 @@
 ## Files
 
 - aft.ui.js -- controls the UI
-- aft.libs.js -- librairies of constants and basic functions
-- aft.core.js -- where most calculations happen, core functions
+- aft.libs.js -- librairies of constants
+- aft.core.js -- where most calculations happen, core (thermo) functions
+- aft.math.js -- librairies of useful mathermatical functions
+- aft.helpers.js -- a few helper functions for development purposes (optional)
 - index.html -- HTML UI
 - style.css -- formats the UI
 - bg.png -- background image (ignore)
