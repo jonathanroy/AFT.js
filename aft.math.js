@@ -8,6 +8,7 @@ var E = function(n) {
 	return Math.pow(10,n);
 };
 
+// Javascript has nice built in function to properly round a number. Here's one.
 var round = function (num, dec) {
 	var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
 	return result;
@@ -27,6 +28,7 @@ Array.prototype.unique = function() {
 	return a;
 };
 
+// Applies a function (fct) to every element of an object (obj)
 var objectWalk = function(fct, obj) {
 	var o = {};
 	$.each(obj, function(i, v) {
@@ -35,12 +37,14 @@ var objectWalk = function(fct, obj) {
 	return o;
 };
 
+// Sums all the elements of an object
 var objectSum = function(object) {
 	var sum = 0;
 	$.each(object, function(i, v) { sum += ( typeof v == 'number' ) ? v : 0; });
 	return sum;
 };
 
+// Combine a list of objects together and sum their shared properties
 var objectsCombinedSum = function(arr) {
 	var combinedObject = {};
 	$.each(arr, function(i, object) {
@@ -52,6 +56,7 @@ var objectsCombinedSum = function(arr) {
 	return combinedObject;
 };
 
+// Returns the size (length) of an object
 var objectSize = function(object) {
 	var size = 0;
 	$.each(object, function(p,v) {
@@ -101,6 +106,12 @@ var bisection = function(args) {
 	
 };
 
+/*
+ * invertMatrix
+ * Returns the inverse of a given NxN matrix
+ * @matrix	Matrix to inverse (NxN array)
+ * @return	Inverse of @matrix (NxN array)
+ */
 
 var invertMatrix = function (matrix) {
 	var ratio, a;
@@ -130,6 +141,14 @@ var invertMatrix = function (matrix) {
 	return invMatrix;
 };
 
+
+/*
+ * matrixMult
+ * Multiplies a matrix with a vector
+ * @matrix	MxN array
+ * @vector	Nx1 array
+ * @return	Nx1 array
+ */
 
 var matrixMult = function(matrix, vector) {
 	

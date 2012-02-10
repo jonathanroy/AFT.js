@@ -1,50 +1,46 @@
 
 /*
  * getEquation
- * Return the reaction equation for a given phi. It does not consider dissociation.
+ * Return the reaction equation for a given phi.
  * @phi		Fuel Equivalence Ratio
  * @FOR_st	Fuel to Oxidizer Ratio (Stoichiometric)
+ * @considerDissociation
+ * @allowedEntities
  * @return	Object Reaction equation
  */
 
-var getEquation = function(phi, FOR_st) {
+var getEquation = function(phi, FOR_st, T, P, considerDissociation, allowedEntities) {
 
 	var FOR_act = phi * FOR_st;
 
 	var nFuel = 1;
 	var nOxi = nFuel / FOR_act;
 	
-	// Stoichiometric (No excess)
-	if ( phi == 1 ) {
-		var nProduct = nFuel,
-			nExcessFuel = 0,
-			nExcessOxi = 0;
-	}
-	// Fuel Lean (Excess Oxidizer)
-	else if ( phi < 1 ) {
-		var nProduct = nFuel,
-			nExcessFuel = 0,
-			nExcessOxi = nFuel * ( 1 / FOR_act - 1 / 2 );
-	}
-	// Fuel Rich (Excess Fuel)
-	else {
-		var nProduct = 2 * nFuel / FOR_act,
-			nExcessFuel = nFuel * ( 1 - 2 / FOR_act ),
-			nExcessOxi = 0;
+	var equation = {};
+	
+	equation.reactants = { 'CO': nFuel, 'O2': nOxi };
+	
+	if ( typeof considerDissociation == 'undefined' || !considerDissociation ) {
+		
+		// Stoichiometric (No excess)
+		if ( phi == 1 )
+			equation.products = { 'CO2': nFuel, 'CO': 0, 'O2': 0, 'O': 0 };
+		// Fuel Lean (Excess Oxidizer)
+		else if ( phi < 1 )
+			equation.products = { 'CO2': nFuel, 'CO': 0, 'O2': ( nFuel * ( 1 / FOR_act - 1 / 2 ) ), 'O': 0 };
+		// Fuel Rich (Excess Fuel)
+		else
+			equation.products = { 'CO2': ( 2 * nFuel / FOR_act ), 'CO': ( nFuel * ( 1 - 2 / FOR_act ) ), 'O2': 0, 'O': 0 };
+	
 	}
 	
-	return {
-		'reactants': {
-			'CO': nFuel,
-			'O2': nOxi
-		},
-		'products': {
-			'CO2': nProduct,
-			'CO': nExcessFuel,
-			'O2': nExcessOxi,
-			'O': 0
-		}
-	};
+	else if ( typeof T != 'undefined' && typeof P != 'undefined' && typeof allowedEntities != 'undefined' )
+		equation.products = dissociateProducts(T, P, equation.reactants, allowedEntities);
+	
+	else
+		return false;
+		
+	return equation;
 	
 };
 
@@ -104,15 +100,11 @@ var HV = function(equation, fuel) {
 var flameTemp = function(phi, P, considerDissociation, allowedEntities) {
 
 	var FOR_st = 2; // Value for Carbon Monoxy - Oxygen (this will eventually be a UI option)
-
-	var equation = getEquation(phi, FOR_st);
 	
 	return bisection({
 		fct: function(T) {
-			if ( typeof considerDissociation != 'undefined' && considerDissociation ) {
-				equation.products = dissociateProducts(T, P, equation.reactants, allowedEntities);
-			}
-			return getdH(equation,T);
+			var equation = getEquation( phi, FOR_st, T, P, considerDissociation, allowedEntities );
+			return getdH( equation , T );
 		},
 		range: {
 			min: T_ref,
@@ -200,7 +192,11 @@ var getG = function(T, P, entities, getTotal) {
  * @return		Entities equilibrium composition (same format as @entities)
  */
 
+window.gibbsi = 0;
+
 var gibbsMinimization = function(T, P, entities, reactants) {
+
+	window.gibbsi++;
 	
 	var species = entities;
 	var elements = explodeEntities( entities );
@@ -264,8 +260,10 @@ var gibbsMinimization = function(T, P, entities, reactants) {
 	var corrArr = matrixMult( invMatrix, b );
 	
 	var testCorrArr = function(arr) {
-		for ( i = 0; i < nSpecies; i++ )
-			if ( Math.abs(arr[i]) > 0.01 ) return false;
+		for ( i = 0; i < nSpecies; i++ ) {
+			if ( Math.abs(arr[i]) > 0.01 )
+				return false;
+		}
 		return true;
 	};
 	
@@ -310,7 +308,8 @@ var dissociateProducts = function(T, P, reactants, allowedEntities) {
 	products = gibbsMinimization(T, P, products, reactants);
 	
 	return products;
-}
+	
+};
 
 
 

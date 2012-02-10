@@ -129,10 +129,6 @@ table.container tbody tr.data_head td {
 	border: 1px solid #ccc;
 }
 
-#allowed_entities_options {
-	margin-left: 20px;
-}
-
 #open_graph {
 	font-size: 13px;
 }
